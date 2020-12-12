@@ -1,7 +1,9 @@
 import sys
 import os
+import webbrowser
+import json
 import tkinter as tk
-import tkinter.filedialog as filedialog
+from tkinter import filedialog as fd
 
 def Main ():
 
@@ -50,29 +52,44 @@ def Main ():
             root.focus()
             sites_update()
 
-    def save():
-        with open("good_morning_app-saved.py", "w") as f:
-            f.write("import sys \nimport webbrowser \n\n")
-            for site in sites:
-                f.write("webbrowser.open(\"{}\", new = 1)\n".format(site))
-            f.write("\nsys.exit()")
+    def run():
+        for site in sites:
+            webbrowser.open_new_tab(site)
         root.focus()
 
     def my_open():
-        nonlocal sites
-        for widget in main_frame.winfo_children():
-            widget.destroy()
-            
-        site_radiobuttons.clear()
-        site_frames.clear()
+        pass
 
-        filename = filedialog.askopenfilename(initialdir = "/", title = "Select File", filetypes = (("text", "*.txt"), ("all files", "*.*")))
-        with open(filename, "r") as f:
-            temp_sites = f.read()
-            sites = temp_sites.split(", ")
+    def save():
+        file_name = fd.asksaveasfilename(
+                defaultextension='.json', filetypes=[("json files", '*.json')],
+                title="Choose filename")
 
+        with open(file_name, "w", encoding="UTF-8") as f:
+            data = {}
+            for index, site in enumerate(sites):
+                data[index] = site
+
+            json.dump(data, f, indent=4, 
+                        sort_keys=True, separators=(',',': '), 
+                        ensure_ascii=False)
         root.focus()
-        sites_update()
+
+    #def my_open():
+    #    nonlocal sites
+    #    for widget in main_frame.winfo_children():
+    #        widget.destroy()
+            
+    #    site_radiobuttons.clear()
+    #    site_frames.clear()
+
+    #    filename = filedialog.askopenfilename(initialdir = "/", title = "Select File", filetypes = (("text", "*.txt"), ("all files", "*.*")))
+    #    with open(filename, "r") as f:
+    #        temp_sites = f.read()
+    #        sites = temp_sites.split(", ")
+
+    #    root.focus()
+    #    sites_update()
 
 
     root = tk.Tk()
@@ -107,12 +124,15 @@ def Main ():
     delete_button = tk.Button(upper_frame, text = "Delete", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340", command = delete)
     delete_button.grid(row = 0, column = 0, pady = (5, 0), sticky = "e")
 
+    run_button = tk.Button(bottom_frame, text = "Run", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340", command = run)
+    run_button.grid(row = 0, column = 4, pady = 6, sticky = "w")
+    
     save_button = tk.Button(bottom_frame, text = "Save", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340", command = save)
-    save_button.grid(row = 0, column = 4, pady = 6, sticky = "w")
-
-    open_button = tk.Button(bottom_frame, text = "Open", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340", command = my_open)
-    open_button.grid(row = 0, column = 3, pady = 6, sticky = "w")
-
+    save_button.grid(row = 0, column = 1, pady = 6, sticky = "e")
+    
+    open_button = tk.Button(bottom_frame, text = "Open", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340")
+    open_button.grid(row = 0, column = 0, pady = 6, sticky = "e")
+    
 
     active_var = tk.IntVar()
     active_var.set(0)
