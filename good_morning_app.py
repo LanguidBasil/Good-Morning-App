@@ -1,4 +1,3 @@
-import sys
 import os
 import webbrowser
 import json
@@ -7,20 +6,19 @@ import tkinter as tk
 import tkinter.messagebox
 from tkinter import filedialog as fd
 
-
 def Main ():
 
     def focus (event):
         event.widget.focus()
-
+        
     def site_focus():
-        for index, site in enumerate(site_radiobuttons):
+        for site, site_frame in zip(site_radiobuttons, site_frames):
             if (root.focus_get() == site):
-                site_frames[index].config(bg = "#334166")
-                site_radiobuttons[index].config(bg = "#334166", fg = "#ef8354", activebackground = "#334166", activeforeground = "#ef8354", selectcolor = "#334166")
+                site_frame.config(bg = "#334166")
+                site.config(bg = "#334166", fg = "#ef8354", activebackground = "#334166", activeforeground = "#ef8354", selectcolor = "#334166")
             else:
-                site_frames[index].config(bg = "#ffffff")
-                site_radiobuttons[index].config(bg = "#ffffff", fg = "#000000", activebackground = "#ffffff", activeforeground = "#000000", selectcolor = "#ffffff")
+                site_frame.config(bg = "#ffffff")
+                site.config(bg = "#ffffff", fg = "#000000", activebackground = "#ffffff", activeforeground = "#000000", selectcolor = "#ffffff")
         root.focus()
 
     def sites_update():
@@ -100,11 +98,12 @@ def Main ():
         site_frames.clear()
 
         filename = fd.askopenfilename(initialdir = "/", title = "Select File", filetypes=[("json files", '*.json')])
-        with open(filename, "r") as f:
-            data = json.load(f)
-            for site in data:
-                #print(site)
-                sites.append(site)
+        if filename:
+            with open(filename, "r") as f:
+                data = json.load(f)
+                for site in data:
+                    #print(site)
+                    sites.append(site)
 
         root.focus()
         sites_update()
@@ -165,6 +164,7 @@ def Main ():
     upper_frame.grid(row = 0, column = 0, columnspan = 5, sticky = "nswe")
     main_frame.grid(row = 1, column = 0, columnspan = 5, sticky = "nswe")
     bottom_frame.grid(row = 2, column = 0, columnspan = 5, sticky = "nswe")
+
 
     root.mainloop()
     
