@@ -2,11 +2,20 @@ import os
 import webbrowser
 import json
 import validators
+import pickle
 import tkinter as tk
 import tkinter.messagebox
 from tkinter import filedialog as fd
 
 def Main ():
+
+    last_used_path = ""
+    if (os.path.exists("Good_Morning_App_settings")):
+        with open("Good_Morning_App_settings", "r") as f:
+            last_used_path = f.read()
+    else:
+        print("Can't find settings")
+
 
     def focus (event):
         event.widget.focus()
@@ -33,6 +42,15 @@ def Main ():
             else:
                 del sites[index]
 
+    def clear_sites():
+        for widget in main_frame.winfo_children():
+            widget.destroy()
+        
+        sites.clear()
+        site_radiobuttons.clear()
+        site_frames.clear()
+        sites_update()
+
     def add():
         new_site = str(adder_entry.get())
         is_valid = validators.url(new_site)
@@ -57,14 +75,8 @@ def Main ():
         root.focus()
 
     def delete_all():
-        if root.focus_get() and sites:
-            for widget in main_frame.winfo_children():
-                widget.destroy()
-            
-            sites.clear()
-            site_radiobuttons.clear()
-            site_frames.clear()
-            sites_update()
+        if sites:
+            clear_sites()
         root.focus()
 
     def run():
@@ -86,24 +98,33 @@ def Main ():
                         sort_keys=True, separators=(',', ": "), 
                         ensure_ascii=False)
 
+            last_used_path = file_name
+            with open("Good_Morning_App_settings", "w") as _f:
+                _f.write(last_used_path)
         root.focus()
 
-    def my_open(**kwargs):
-        nonlocal sites
-        for widget in main_frame.winfo_children():
-            widget.destroy()
-        
-        sites.clear()
-        site_radiobuttons.clear()
-        site_frames.clear()
+    def my_open(*args):
 
-        filename = fd.askopenfilename(initialdir = "/", title = "Select File", filetypes=[("json files", '*.json')])
-        if filename:
-            with open(filename, "r") as f:
+
+        if args:
+            clear_sites()
+            with open(args[0], "r") as f:
                 data = json.load(f)
                 for site in data:
                     #print(site)
                     sites.append(site)
+        else:
+            file_name = fd.askopenfilename(initialdir = "/", title = "Select File", filetypes=[("json files", '*.json')])
+            if file_name:
+                clear_sites()
+                with open(file_name, "r") as f:
+                    data = json.load(f)
+                    for site in data:
+                        #print(site)
+                        sites.append(site)
+                last_used_path = file_name
+                with open("settings", "w") as _f:
+                    _f.write(last_used_path)
 
         root.focus()
         sites_update()
@@ -160,6 +181,8 @@ def Main ():
     site_radiobuttons = []
     site_frames = []
     sites_update()
+    if last_used_path:
+        my_open(last_used_path)
 
     upper_frame.grid(row = 0, column = 0, columnspan = 5, sticky = "nswe")
     main_frame.grid(row = 1, column = 0, columnspan = 5, sticky = "nswe")
