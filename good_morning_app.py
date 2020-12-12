@@ -66,30 +66,34 @@ def Main ():
                 title="Choose filename")
 
         with open(file_name, "w", encoding="UTF-8") as f:
-            data = {}
-            for index, site in enumerate(sites):
-                data[index] = site
+            data = []
+            for site in sites:
+                data.append(site)
 
             json.dump(data, f, indent=4, 
-                        sort_keys=True, separators=(',',': '), 
+                        sort_keys=True, separators=(',', ": "), 
                         ensure_ascii=False)
+
         root.focus()
 
-    #def my_open():
-    #    nonlocal sites
-    #    for widget in main_frame.winfo_children():
-    #        widget.destroy()
-            
-    #    site_radiobuttons.clear()
-    #    site_frames.clear()
+    def my_open():
+        nonlocal sites
+        for widget in main_frame.winfo_children():
+            widget.destroy()
+        
+        sites.clear()
+        site_radiobuttons.clear()
+        site_frames.clear()
 
-    #    filename = filedialog.askopenfilename(initialdir = "/", title = "Select File", filetypes = (("text", "*.txt"), ("all files", "*.*")))
-    #    with open(filename, "r") as f:
-    #        temp_sites = f.read()
-    #        sites = temp_sites.split(", ")
+        filename = fd.askopenfilename(initialdir = "/", title = "Select File", filetypes=[("json files", '*.json')])
+        with open(filename, "r") as f:
+            data = json.load(f)
+            for site in data:
+                #print(site)
+                sites.append(site)
 
-    #    root.focus()
-    #    sites_update()
+        root.focus()
+        sites_update()
 
 
     root = tk.Tk()
@@ -130,7 +134,7 @@ def Main ():
     save_button = tk.Button(bottom_frame, text = "Save", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340", command = save)
     save_button.grid(row = 0, column = 1, pady = 6, sticky = "e")
     
-    open_button = tk.Button(bottom_frame, text = "Open", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340")
+    open_button = tk.Button(bottom_frame, text = "Open", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340", command = my_open)
     open_button.grid(row = 0, column = 0, pady = 6, sticky = "e")
     
 
