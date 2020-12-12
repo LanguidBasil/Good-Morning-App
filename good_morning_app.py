@@ -2,6 +2,7 @@ import sys
 import os
 import webbrowser
 import json
+import validators
 import tkinter as tk
 from tkinter import filedialog as fd
 
@@ -35,11 +36,14 @@ def Main ():
 
     def add():
         new_site = str(adder_entry.get())
-        if (new_site):
+        is_valid = validators.url(new_site)
+        if (is_valid):
             adder_entry.delete(0, "end")
             sites.append(new_site)
             sites_update()
             root.focus()
+        else:
+            tk.messagebox.showwarning(title="Warning", message="This URL is not valid")
 
     def delete():
         if root.focus_get() and sites:
