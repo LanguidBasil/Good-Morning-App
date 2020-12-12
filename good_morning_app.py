@@ -35,19 +35,31 @@ def Main ():
 
     def add():
         new_site = str(adder_entry.get())
-        adder_entry.delete(0, "end")
-        sites.append(new_site)
-        sites_update()
-        root.focus()
+        if (new_site):
+            adder_entry.delete(0, "end")
+            sites.append(new_site)
+            sites_update()
+            root.focus()
 
     def delete():
-        if root.focus_get():
-            nonlocal sites
+        if root.focus_get() and sites:
+            #nonlocal sites
             del sites[active_var.get()]
 
             for widget in main_frame.winfo_children():
                 widget.destroy()
             
+            site_radiobuttons.clear()
+            site_frames.clear()
+            sites_update()
+        root.focus()
+
+    def delete_all():
+        if root.focus_get() and sites:
+            for widget in main_frame.winfo_children():
+                widget.destroy()
+            
+            sites.clear()
             site_radiobuttons.clear()
             site_frames.clear()
             root.focus()
@@ -108,7 +120,7 @@ def Main ():
 
     main_frame = tk.Frame(root, bg = "#ffffff")
     main_frame.rowconfigure((0,1,2,3,4,5,6,7), minsize = 40)
-    main_frame.columnconfigure(0, minsize = 402)
+    main_frame.columnconfigure(0, minsize = 400)
 
     bottom_frame = tk.Frame(root, relief = tk.RAISED, bd = 1, bg = "#4f5d75")
     bottom_frame.rowconfigure(0, minsize = 40)
@@ -116,7 +128,7 @@ def Main ():
 
 
     adder_entry = tk.Entry(upper_frame, font = ("Times new roman", 10), bg = "#d8d9d9", fg = "#000000")
-    adder_entry.grid(row = 0, column = 2, columnspan = 2, pady = (5, 0), sticky = "w")
+    adder_entry.grid(row = 0, column = 2, columnspan = 2, padx = (10, 10), pady = (5, 0), sticky = "w")
     adder_entry.focus_set()
 
     add_button = tk.Button(upper_frame, text = "Add", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340", command = add)
@@ -124,6 +136,9 @@ def Main ():
 
     delete_button = tk.Button(upper_frame, text = "Delete", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340", command = delete)
     delete_button.grid(row = 0, column = 0, pady = (5, 0), sticky = "e")
+
+    delete_all_button = tk.Button(upper_frame, text = "Delete All", font = ("Times new roman", 10), width = 8, bg = "#d8d9d9", fg = "#e57340", command = delete_all)
+    delete_all_button.grid(row = 0, column = 1, pady = (5, 0), sticky = "e")
 
     run_button = tk.Button(bottom_frame, text = "Run", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340", command = run)
     run_button.grid(row = 0, column = 4, pady = 6, sticky = "w")
