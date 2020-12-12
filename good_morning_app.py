@@ -5,6 +5,7 @@ import json
 import tkinter as tk
 from tkinter import filedialog as fd
 
+
 def Main ():
 
     def focus (event):
@@ -57,9 +58,6 @@ def Main ():
             webbrowser.open_new_tab(site)
         root.focus()
 
-    def my_open():
-        pass
-
     def save():
         file_name = fd.asksaveasfilename(
                 defaultextension='.json', filetypes=[("json files", '*.json')],
@@ -76,7 +74,7 @@ def Main ():
 
         root.focus()
 
-    def my_open():
+    def my_open(**kwargs):
         nonlocal sites
         for widget in main_frame.winfo_children():
             widget.destroy()
@@ -94,7 +92,6 @@ def Main ():
 
         root.focus()
         sites_update()
-
 
     root = tk.Tk()
     root.title("Good morning app")
