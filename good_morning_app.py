@@ -48,7 +48,6 @@ def Main ():
 
     def delete():
         if root.focus_get() and sites:
-            #nonlocal sites
             del sites[active_var.get()]
 
             for widget in main_frame.winfo_children():
@@ -67,8 +66,8 @@ def Main ():
             sites.clear()
             site_radiobuttons.clear()
             site_frames.clear()
-            root.focus()
             sites_update()
+        root.focus()
 
     def run():
         for site in sites:
