@@ -1,11 +1,11 @@
 # Good-Morning-App
 
-#### Problem
+### Problem
 I found out that everyday I wake up and open a lot of sites: 2 mail
 boxes, my university site, vk, trello board, and so on. Everyday these sites are the same. 
 I decided to automate this
 
-#### How it works
+### How it works
 You enter websites you want to open. You can save this list to json and on starting
 app your changes will be saved. On clicking `Run` button, you guessed it, all sites
 will open at once (there is also `auto-close` toggle near that button)
