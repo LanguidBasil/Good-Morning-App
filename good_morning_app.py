@@ -1,3 +1,4 @@
+import sys
 import os
 import webbrowser
 import json
@@ -76,6 +77,12 @@ def Main ():
     def button_run():
         for site in sites:
             webbrowser.open_new_tab(site)
+        root.focus()
+        if (auto_close_var.get):
+            sys.exit()
+
+    def button_auto_close():
+        auto_close_var.set(not auto_close_var.get())
         root.focus()
 
     def button_save():
@@ -161,18 +168,25 @@ def Main ():
 
     run_button = tk.Button(bottom_frame, text = "Run", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340", command = button_run)
     run_button.grid(row = 0, column = 4, pady = 6, sticky = "w")
+
+    auto_close_button = tk.Checkbutton(bottom_frame, text = "auto-close", command = button_auto_close)
+    auto_close_button.configure(activebackground = "#4f5d75", activeforeground = "#e57340", bg = "#4f5d75", fg = "#e57340")
+    auto_close_button.select()
+    auto_close_button.grid(row = 0, column = 3, padx = (0, 5), pady = 6, sticky = "w")
     
     save_button = tk.Button(bottom_frame, text = "Save", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340", command = button_save)
-    save_button.grid(row = 0, column = 1, pady = 6, sticky = "e")
+    save_button.grid(row = 0, column = 1, pady = 5, sticky = "e")
     
     open_button = tk.Button(bottom_frame, text = "Open", font = ("Times new roman", 10), width = 6, bg = "#d8d9d9", fg = "#e57340", command = button_open)
-    open_button.grid(row = 0, column = 0, pady = 6, sticky = "e")
+    open_button.grid(row = 0, column = 0, pady = 5, sticky = "e")
 
     # ---------------------------------------------------- Prepairing to launch ------------------------------------------------------
     
     SETTINGSFILENAME = "Good_Morning_App_settings"
     last_used_path = ""
 
+    auto_close_var = tk.BooleanVar()
+    auto_close_var.set(True)
     focused_site_var = tk.IntVar()
     focused_site_var.set(0)
 
