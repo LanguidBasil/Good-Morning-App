@@ -13,3 +13,5 @@ will open at once (there is also `auto-close` toggle near that button)
 It was meant to be on startup. Imagine it, you wake up, boot up your pc and  
 on clicking one button your -open-6-sites- routine is done
 
+If you don't want to change source code - **you can download only .rar file**  
+It contains .exe file so you can easily start using this app
