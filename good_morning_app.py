@@ -12,8 +12,11 @@ def Main ():
 
     def focus (event):
         event.widget.focus()
+        if (root.focus_get() != delete_button):
+            focused_site_var.set(-1)
         
     def site_focus():
+        print(focused_site_var.get())
         for site, site_frame in zip(site_radiobuttons, site_frames):
             if (root.focus_get() == site):
                 site_frame.config(bg = "#334166")
@@ -21,6 +24,7 @@ def Main ():
             else:
                 site_frame.config(bg = "#ffffff")
                 site.config(bg = "#ffffff", fg = "#000000", activebackground = "#ffffff", activeforeground = "#000000", selectcolor = "#ffffff")
+
         root.focus()
 
     def sites_update():
@@ -58,7 +62,8 @@ def Main ():
         root.focus()
 
     def button_delete():
-        if root.focus_get() and sites:
+        if sites and (focused_site_var.get() != -1):
+            print("Trying to delete", focused_site_var.get())
             del sites[focused_site_var.get()]
 
             for widget in main_frame.winfo_children():
@@ -68,6 +73,7 @@ def Main ():
             site_frames.clear()
             sites_update()
         root.focus()
+        focused_site_var.set(-1)
 
     def button_delete_all():
         if sites:
@@ -133,6 +139,7 @@ def Main ():
 
     root = tk.Tk()
     root.title("Good morning app")
+
 
     root.resizable(False, False)
     root.rowconfigure((0, 2), minsize = 40)
