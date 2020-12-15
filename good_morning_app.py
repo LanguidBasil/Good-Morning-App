@@ -16,7 +16,6 @@ def Main ():
             focused_site_var.set(-1)
         
     def site_focus():
-        print(focused_site_var.get())
         for site, site_frame in zip(site_radiobuttons, site_frames):
             if (root.focus_get() == site):
                 site_frame.config(bg = "#334166")
@@ -47,6 +46,15 @@ def Main ():
         site_radiobuttons.clear()
         site_frames.clear()
         sites_update()
+
+    def on_closing():
+        result = tk.messagebox.askyesno("Quit", "Save changes before quit?", icon ='warning')
+
+        if result:
+            button_save(last_used_path)
+            root.destroy()
+        else:
+            root.destroy()
         
     # ---------------------------------------------------- Buttons functions ------------------------------------------------------
 
@@ -63,7 +71,6 @@ def Main ():
 
     def button_delete():
         if sites and (focused_site_var.get() != -1):
-            print("Trying to delete", focused_site_var.get())
             del sites[focused_site_var.get()]
 
             for widget in main_frame.winfo_children():
@@ -91,23 +98,35 @@ def Main ():
         auto_close_var.set(not auto_close_var.get())
         root.focus()
 
-    def button_save():
-        file_name = fd.asksaveasfilename(
-                defaultextension='.json', filetypes=[("json files", '*.json')],
-                title="Choose filename")
+    def button_save(*args):
+        if args:
+            with open(args[0], "w", encoding="UTF-8") as f:
+                data = []
+                for site in sites:
+                    data.append(site)
 
-        with open(file_name, "w", encoding="UTF-8") as f:
-            data = []
-            for site in sites:
-                data.append(site)
+                json.dump(data, f, indent=4, 
+                            sort_keys=True, separators=(',', ": "), 
+                            ensure_ascii=False)
 
-            json.dump(data, f, indent=4, 
-                        sort_keys=True, separators=(',', ": "), 
-                        ensure_ascii=False)
+        else:
+            file_name = fd.asksaveasfilename(
+                    defaultextension='.json', filetypes=[("json files", '*.json')],
+                    title="Choose filename")
 
-            last_used_path = file_name
-            with open(SETTINGSFILENAME, "w") as _f:
-                _f.write(last_used_path)
+            if(file_name):
+                with open(file_name, "w", encoding="UTF-8") as f:
+                    data = []
+                    for site in sites:
+                        data.append(site)
+
+                    json.dump(data, f, indent=4, 
+                                sort_keys=True, separators=(',', ": "), 
+                                ensure_ascii=False)
+
+                    last_used_path = file_name
+                    with open(SETTINGSFILENAME, "w") as _f:
+                        _f.write(last_used_path)
         root.focus()
 
     def button_open(*args):
@@ -214,7 +233,8 @@ def Main ():
     main_frame.grid(row = 1, column = 0, columnspan = 5, sticky = "nswe")
     bottom_frame.grid(row = 2, column = 0, columnspan = 5, sticky = "nswe")
 
-
+    
+    root.protocol("WM_DELETE_WINDOW", on_closing)
     root.mainloop()
     
 
