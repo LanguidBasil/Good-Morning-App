@@ -249,6 +249,7 @@ def Main ():
     main_frame.grid(row = 1, column = 0, columnspan = 5, sticky = "nswe")
     bottom_frame.grid(row = 2, column = 0, columnspan = 5, sticky = "nswe")
 
+    adder_entry.focus();
     changes_were_made = False;
 
     
