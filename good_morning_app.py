@@ -12,6 +12,8 @@ def Main ():
 
     def focus (event):
         event.widget.focus()
+        if (root.focus_get() != delete_button):
+            focused_site_var.set(-1)
         
     def site_focus():
         for site, site_frame in zip(site_radiobuttons, site_frames):
@@ -21,9 +23,12 @@ def Main ():
             else:
                 site_frame.config(bg = "#ffffff")
                 site.config(bg = "#ffffff", fg = "#000000", activebackground = "#ffffff", activeforeground = "#000000", selectcolor = "#ffffff")
+
         root.focus()
 
     def sites_update():
+        nonlocal changes_were_made;
+        changes_were_made = True
         for index, site in enumerate(sites):
             if site:
                 site_frame = tk.Frame(main_frame, bg = "#ffffff")
@@ -43,6 +48,18 @@ def Main ():
         site_radiobuttons.clear()
         site_frames.clear()
         sites_update()
+
+    def on_closing():
+        if changes_were_made:
+            result = tk.messagebox.askyesno("Quit", "Save changes before quit?", icon ='warning')
+
+            if result:
+                button_save(last_used_path)
+                root.destroy()
+            else:
+                root.destroy()
+        else:
+            root.destroy()
         
     # ---------------------------------------------------- Buttons functions ------------------------------------------------------
 
@@ -58,7 +75,7 @@ def Main ():
         root.focus()
 
     def button_delete():
-        if root.focus_get() and sites:
+        if sites and (focused_site_var.get() != -1):
             del sites[focused_site_var.get()]
 
             for widget in main_frame.winfo_children():
@@ -68,6 +85,7 @@ def Main ():
             site_frames.clear()
             sites_update()
         root.focus()
+        focused_site_var.set(-1)
 
     def button_delete_all():
         if sites:
@@ -85,26 +103,47 @@ def Main ():
         auto_close_var.set(not auto_close_var.get())
         root.focus()
 
-    def button_save():
-        file_name = fd.asksaveasfilename(
-                defaultextension='.json', filetypes=[("json files", '*.json')],
-                title="Choose filename")
+    def button_save(*args):
+        nonlocal changes_were_made;
 
-        with open(file_name, "w", encoding="UTF-8") as f:
-            data = []
-            for site in sites:
-                data.append(site)
+        if args:
+            with open(args[0], "w", encoding="UTF-8") as f:
+                data = []
+                for site in sites:
+                    data.append(site)
 
-            json.dump(data, f, indent=4, 
-                        sort_keys=True, separators=(',', ": "), 
-                        ensure_ascii=False)
+                json.dump(data, f, indent=4, 
+                            sort_keys=True, separators=(',', ": "), 
+                            ensure_ascii=False)
 
-            last_used_path = file_name
-            with open(SETTINGSFILENAME, "w") as _f:
-                _f.write(last_used_path)
+        else:
+            file_name = fd.asksaveasfilename(
+                    defaultextension='.json', filetypes=[("json files", '*.json')],
+                    title="Choose filename")
+
+            if(file_name):
+                with open(file_name, "w", encoding="UTF-8") as f:
+                    data = []
+                    for site in sites:
+                        data.append(site)
+
+                    json.dump(data, f, indent=4, 
+                                sort_keys=True, separators=(',', ": "), 
+                                ensure_ascii=False)
+
+                    last_used_path = file_name
+                    with open(SETTINGSFILENAME, "w") as _f:
+                        _f.write(last_used_path)
+        
+        changes_were_made = False
         root.focus()
 
     def button_open(*args):
+
+        if changes_were_made:
+            result = tk.messagebox.askyesno("Continue?", "Save changes before continuing", icon = "warning")
+            if result:
+                button_save(last_used_path)
 
         if args:
             clear_sites()
@@ -133,6 +172,7 @@ def Main ():
 
     root = tk.Tk()
     root.title("Good morning app")
+
 
     root.resizable(False, False)
     root.rowconfigure((0, 2), minsize = 40)
@@ -190,6 +230,8 @@ def Main ():
     focused_site_var = tk.IntVar()
     focused_site_var.set(0)
 
+    changes_were_made = False
+
     sites = []
     site_radiobuttons = []
     site_frames = []
@@ -207,7 +249,11 @@ def Main ():
     main_frame.grid(row = 1, column = 0, columnspan = 5, sticky = "nswe")
     bottom_frame.grid(row = 2, column = 0, columnspan = 5, sticky = "nswe")
 
+    adder_entry.focus();
+    changes_were_made = False;
 
+    
+    root.protocol("WM_DELETE_WINDOW", on_closing)
     root.mainloop()
     
 
