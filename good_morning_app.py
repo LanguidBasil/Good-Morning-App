@@ -27,6 +27,8 @@ def Main ():
         root.focus()
 
     def sites_update():
+        nonlocal changes_were_made;
+        changes_were_made = True
         for index, site in enumerate(sites):
             if site:
                 site_frame = tk.Frame(main_frame, bg = "#ffffff")
@@ -48,11 +50,14 @@ def Main ():
         sites_update()
 
     def on_closing():
-        result = tk.messagebox.askyesno("Quit", "Save changes before quit?", icon ='warning')
+        if changes_were_made:
+            result = tk.messagebox.askyesno("Quit", "Save changes before quit?", icon ='warning')
 
-        if result:
-            button_save(last_used_path)
-            root.destroy()
+            if result:
+                button_save(last_used_path)
+                root.destroy()
+            else:
+                root.destroy()
         else:
             root.destroy()
         
@@ -99,6 +104,8 @@ def Main ():
         root.focus()
 
     def button_save(*args):
+        nonlocal changes_were_made;
+
         if args:
             with open(args[0], "w", encoding="UTF-8") as f:
                 data = []
@@ -127,9 +134,16 @@ def Main ():
                     last_used_path = file_name
                     with open(SETTINGSFILENAME, "w") as _f:
                         _f.write(last_used_path)
+        
+        changes_were_made = False
         root.focus()
 
     def button_open(*args):
+
+        if changes_were_made:
+            result = tk.messagebox.askyesno("Continue?", "Save changes before continuing", icon = "warning")
+            if result:
+                button_save(last_used_path)
 
         if args:
             clear_sites()
@@ -216,6 +230,8 @@ def Main ():
     focused_site_var = tk.IntVar()
     focused_site_var.set(0)
 
+    changes_were_made = False
+
     sites = []
     site_radiobuttons = []
     site_frames = []
@@ -232,6 +248,8 @@ def Main ():
     upper_frame.grid(row = 0, column = 0, columnspan = 5, sticky = "nswe")
     main_frame.grid(row = 1, column = 0, columnspan = 5, sticky = "nswe")
     bottom_frame.grid(row = 2, column = 0, columnspan = 5, sticky = "nswe")
+
+    changes_were_made = False;
 
     
     root.protocol("WM_DELETE_WINDOW", on_closing)
