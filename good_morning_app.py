@@ -6,6 +6,7 @@ import validators
 import pickle
 import tkinter as tk
 import tkinter.messagebox
+import tkinter.ttk
 from tkinter import filedialog as fd
 
 def Main ():
@@ -33,7 +34,12 @@ def Main ():
             if site:
                 site_frame = tk.Frame(main_frame, bg = "#ffffff")
                 site_frames.append(site_frame)
-                site = tk.Radiobutton(site_frame, text=f"{sites[index]}", height = 2, font = ("Times new roman", 10), bg = "#ffffff", indicatoron = 0, bd = 0, variable = focused_site_var, value = index, command = site_focus)
+
+                text = sites[index]
+                if (len(text) > 70):
+                    text = text[:70] + ".."
+
+                site = tk.Radiobutton(site_frame, text=f"{text}", height = 2, font = ("Times new roman", 10), bg = "#ffffff", indicatoron = 0, bd = 0, variable = focused_site_var, value = index, command = site_focus)
                 site_radiobuttons.append(site)
                 site.pack(side = tk.LEFT)
                 site_frame.grid(row = index, column = 0, sticky = "nswe")
@@ -172,7 +178,6 @@ def Main ():
 
     root = tk.Tk()
     root.title("Good morning app")
-
 
     root.resizable(False, False)
     root.rowconfigure((0, 2), minsize = 40)
