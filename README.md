@@ -1,7 +1,7 @@
 # Good-Morning-App
 
 ### Problem
-I found out that everyday I wake up and open a lot of sites:  
+I noticed that everyday I wake up and open a lot of sites:  
 2 mail boxes, my university site, vk, trello board, and so on.  
 Everyday these sites are the same. *I decided to automate this*
 
