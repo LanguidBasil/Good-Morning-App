@@ -169,7 +169,7 @@ Thumbs.db
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# visual sudio project and solution
+# visual studio project and solution
 *.suo
 *.sln
 *.vcxproj
