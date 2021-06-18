@@ -1,9 +1,9 @@
 #include "MainFrame.h"
 
 MainFrame::MainFrame() 
-	: wxFrame(nullptr, wxID_ANY, "Good Morning")
+	: wxFrame(nullptr, 0, "Good Morning", wxPoint(200, 200), wxSize(400, 500))
 {
-		
+	barTop = new BarTop(this);
 }
 
 MainFrame::~MainFrame()

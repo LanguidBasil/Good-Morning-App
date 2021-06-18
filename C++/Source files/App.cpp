@@ -16,6 +16,7 @@ App::~App()
 bool App::OnInit()
 {
 	mainFrame = new MainFrame();
+	mainFrame->Center();
 	mainFrame->Show();
 
 	return true;
