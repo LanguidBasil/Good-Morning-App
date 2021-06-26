@@ -2,7 +2,6 @@ import sys
 import os
 import webbrowser
 import json
-import validators
 import pickle
 import tkinter as tk
 import tkinter.messagebox
