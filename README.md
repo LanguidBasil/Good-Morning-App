@@ -12,3 +12,5 @@ will open at once (there is also `auto-close` toggle near that button)
 
 It was meant to be on startup. Imagine it, you wake up, boot up your pc and  
 on clicking one button your -open-6-sites- routine is done
+
+![Screenshot (187)](https://user-images.githubusercontent.com/72715882/123923259-ad614e80-d93d-11eb-9185-58e5d989ae3a.png)
